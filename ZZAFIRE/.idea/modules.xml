@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ZZAFIRE.iml" filepath="$PROJECT_DIR$/ZZAFIRE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZZAFIRE.iml" filepath="$PROJECT_DIR$/ZZAFIRE.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

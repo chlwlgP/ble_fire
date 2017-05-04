@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.superdroid.test.zzafire">
 
-
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -31,7 +30,16 @@
             android:label="WD기기관리" />
         <activity android:name=".rename" />
         <activity android:name=".realtime_data" />
-        <activity android:name=".selecttime_data"></activity>
+        <activity android:name=".selecttime_data" />
+
+        <service
+            android:name=".BlutoothLeService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".BluetoothLeService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
