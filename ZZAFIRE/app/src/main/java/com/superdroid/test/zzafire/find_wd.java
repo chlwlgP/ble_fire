@@ -2,6 +2,12 @@ package com.superdroid.test.zzafire;
 
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +26,13 @@ public class find_wd extends AppCompatActivity {
 
     ListView listView;//리스트뷰 객체
     BleList bleList = null;//리스트 어댑터
+    private BluetoothAdapter mBluetoothAdapter;
+    private boolean mScanning;
+    private Handler mHandler;
+
+    private static final int REQUEST_ENABLE_BT = 1;
+    // Stops scanning after 10 seconds.
+    private static final long SCAN_PERIOD = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,52 +43,69 @@ public class find_wd extends AppCompatActivity {
         bleList = new BleList();
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(bleList);
+        mHandler = new Handler();
 
-    }
 
-    public void test_addDevice(){
-
-        if(bleList.addresss.isEmpty()) {
-
-            String device_string = "기기명1";
-            int rssi = 1111;
-            String connect = "비연결1";
-            bleList.addDevice(device_string, rssi, connect);
-
-            String device_string2 = "기기명2";
-            int rssi2 = 2222;
-            String connect2 = "비연결2";
-            bleList.addDevice(device_string2, rssi2, connect2);
-
-            bleList.notifyDataSetChanged();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    String device_string3 = "기기명3";
-                    int rssi3 = 3333;
-                    String connect3 = "비연결3";
-                    bleList.addDevice(device_string3, rssi3, connect3);
-                    bleList.notifyDataSetChanged();
-                }
-            }, 500);// 0.5초 정도 딜레이를 준 후 시작
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "ble지원이 되지 않는 기기입니다.", Toast.LENGTH_SHORT).show();
+            finish();
         }
-        else
-        {
-            bleList.notifyDataSetChanged();
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "bluetooth가 지원이 되지 않는 기기입니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
     }
+
+
     public void mOnClick_update_device(View v) {
 
-
-        test_addDevice();
-
+        scanLeDevice(true);
     }
 
+    private void scanLeDevice(final boolean enable) {
+        if (enable) {
+            bleList.clear();
+            bleList.notifyDataSetChanged();
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    Toast.makeText(find_wd.this, "기기검색을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }, SCAN_PERIOD);
+            mScanning = true;
+
+        } else {
+            mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            bleList.clear();
+            bleList.notifyDataSetChanged();
+        }
+    }
+
+    private BluetoothAdapter.LeScanCallback mLeScanCallback =
+            new BluetoothAdapter.LeScanCallback() {
+
+                @Override
+                public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
+
+                            String connect ="비연결";
+                            bleList.addDevice(device,rssi,connect);
+                            bleList.notifyDataSetChanged();
+
+                }
+            };
+
     private class BleList extends BaseAdapter {
-        private ArrayList<String> devices;
-        private ArrayList<String> addresss;
+        private ArrayList<BluetoothDevice> devices;
+        private ArrayList<BluetoothDevice> addresss;
         private ArrayList<Integer> RSSIs;
         private ArrayList<String> connects;
         private LayoutInflater inflater;
@@ -82,18 +113,23 @@ public class find_wd extends AppCompatActivity {
 
         public BleList() {
             super();
-            devices = new ArrayList<String>();
-            addresss = new ArrayList<String>();
+            devices = new ArrayList<BluetoothDevice>();
+            addresss = new ArrayList<BluetoothDevice>();
             RSSIs = new ArrayList<Integer>();
             connects = new ArrayList<String>();
             inflater = ((Activity) find_wd.this).getLayoutInflater();
         }
 
-        public void addDevice(String device, int rssi, String connect) {
-            devices.add(device);
-            addresss.add(device);
-            RSSIs.add(rssi);
-            connects.add(connect);
+        public void addDevice(BluetoothDevice device, int rssi, String connect) {
+            if(!devices.contains(device)){
+                devices.add(device);
+                addresss.add(device);
+                RSSIs.add(rssi);
+                connects.add(connect);
+            }
+            else{
+                RSSIs.set(devices.indexOf(device),rssi);
+            }
         }
 
         public void clear() {
@@ -135,12 +171,15 @@ public class find_wd extends AppCompatActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
+            String deviceName = devices.get(position).getName();
+            String deviceAddress = addresss.get(position).getAddress();
             int rssi = RSSIs.get(position);
+            String connect = connects.get(position);
 
-            viewHolder.deviceName.setText(devices.get(position));
-            viewHolder.deviceAddress.setText(addresss.get(position));
+            viewHolder.deviceName.setText(deviceName != null && deviceName.length() > 0 ?deviceName:"알 수 없는 장치");
+            viewHolder.deviceAddress.setText(deviceAddress);
             viewHolder.deviceRssi.setText(String.valueOf(rssi));
-            viewHolder.deviceConnect.setText(connects.get(position));
+            viewHolder.deviceConnect.setText(connect);
 
             viewHolder.deviceButton.setTag(position);
             viewHolder.deviceButton.setOnClickListener(btnClickListener);
