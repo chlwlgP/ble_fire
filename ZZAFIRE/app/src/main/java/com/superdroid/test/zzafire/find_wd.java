@@ -30,9 +30,12 @@ import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class find_wd extends AppCompatActivity {
     private final static String TAG = find_wd.class.getSimpleName();
@@ -276,6 +279,7 @@ public class find_wd extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
+
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 updateConnectionState("연결");
@@ -290,7 +294,44 @@ public class find_wd extends AppCompatActivity {
                 // Show all the supported services and characteristics on the user interface.
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+
+                //170512 추가된 코드 -시작-
+
+                //기간별 데이터 조회를 위해서 year/month , year/month/day hour:min:sec 형태로 저장한다.
+                SimpleDateFormat year_month = new SimpleDateFormat("yyyy/M", Locale.KOREAN);
+                SimpleDateFormat time = new SimpleDateFormat("yyyy/M/dd HH:mm:ss", Locale.KOREAN);
+
+                //현재 시간을 받아온다.
+                Date currentTime = new Date();
+
+                //연결이 되었을 때,
+                if(intent.getStringExtra(BluetoothLeService.EXTRA_DATA) != "nodata")
+                {
+                    //현재 시간을 기준으로 formatting 하여서, 각각 저장한다.
+                    String year_month_time = year_month.format(currentTime);
+                    String dTime = time.format(currentTime);
+
+                    String deviceaddr = buttonInfo.viewHolder.deviceAddress.getText().toString();
+                    String HRData = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+
+                    //각각의  값을 DB에 저장을 한다.
+                    DeviceInfo hr = new DeviceInfo(deviceaddr,HRData,year_month_time,dTime);
+
+                    //result 는 테이블에 어떻게 저장되는 지를 보여준다.
+                    String result;
+                    result = deviceaddr +" / " + HRData + " / " + year_month_time + " / " + dTime;
+
+                    Log.d("Result",result);
+                    hr.save();
+                }
+                //연결이 되지 않아서, nodata가 뜰 때,
+                else
+                {
+                    Log.d("HR1","Nodata!");
+                }
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+
+                //170512 추가된 코드 -끝-
             }
         }
     };
@@ -314,6 +355,7 @@ public class find_wd extends AppCompatActivity {
                             }
                             mBluetoothLeService.readCharacteristic(characteristic);
                         }
+
                         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
                             mNotifyCharacteristic = characteristic;
                             mBluetoothLeService.setCharacteristicNotification(
@@ -335,9 +377,6 @@ public class find_wd extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-
-
 
                 int cnt = 0;
                 List<DeviceAddress> infos = DeviceAddress.listAll(DeviceAddress.class); //DB값을 로드할 때, 이 리스트를 선언해야됨.

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class selecttime_data extends AppCompatActivity {
@@ -93,6 +95,14 @@ public class selecttime_data extends AppCompatActivity {
         {
             bleList.notifyDataSetChanged();
         }
+
+        List<DeviceInfo> infos = DeviceInfo.listAll(DeviceInfo.class);
+
+        for(int i=0;i<infos.size();i++)
+        {
+            Log.d("HR",infos.get(i).hrdata);
+        }
+
     }
 
     private class BleList extends BaseAdapter {
