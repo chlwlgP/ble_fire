@@ -16,7 +16,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="com.orm.SugarApp">
+
+        <meta-data android:name="DATABASE" android:value="DeviceInfo.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.superdroid.test.zzafire" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +40,7 @@
         <activity android:name=".selecttime_data" />
 
         <service
-            android:name=".BlutoothLeService"
+            android:name=".BluetoothLeService"
             android:enabled="true"
             android:exported="true" />
         <service

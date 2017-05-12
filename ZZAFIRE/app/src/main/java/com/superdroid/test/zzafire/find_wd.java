@@ -331,9 +331,61 @@ public class find_wd extends AppCompatActivity {
     }
 
     private void updateConnectionState(final String resourceId) {
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+
+
+
+                int cnt = 0;
+                List<DeviceAddress> infos = DeviceAddress.listAll(DeviceAddress.class); //DB값을 로드할 때, 이 리스트를 선언해야됨.
+                if(resourceId == "연결")
+                {
+
+                    if(infos.size() == 0)
+                    {
+                        DeviceAddress dinfo = new DeviceAddress(String.valueOf(bleList.devices.get(buttonInfo.position).getAddress()));
+                        Log.d("HR : ",String.valueOf(bleList.devices.get(buttonInfo.position).getAddress()));
+                        dinfo.save();
+                    }
+                    else
+                    {
+                        Log.d("kwon","오류남");
+                        Log.d("kwon",String.valueOf(infos.size()));
+                        for(int i =0 ;i< infos.size();i++)
+                        {
+                            //기존에 저장된 DB값과, 새로 연결되는 기기의 값이 일치하지 않는 경우 cnt++를 한다.
+                            if(String.valueOf(infos.get(i).deviceaddr).equals(String.valueOf(bleList.devices.get(buttonInfo.position).getAddress())))
+                            {
+                                cnt++;
+                            }
+                            else
+                            {
+                                cnt=0;
+                                break; // 같은 것이 있을 경우,
+
+                            }
+
+                            //cnt 값이 기존에 저장된 infos.size()와 같으면(같은 addr이 하나도 없음), 아래와 같이 새롭게 기기를 추가해준다.
+                            if(cnt == infos.size())
+                            {
+                                DeviceAddress dinfo = new DeviceAddress(String.valueOf(bleList.devices.get(buttonInfo.position).getAddress()));
+                                Log.d("dinfo",String.valueOf(bleList.devices.get(buttonInfo.position).getAddress()));
+                                dinfo.save();
+                            }
+                        }
+                    }
+
+                    for(int i=0;i<infos.size();i++)
+                    {
+                        String result;
+                        Log.d("result",infos.get(i).deviceaddr);
+                    }
+                    // String.valueOf(infos.get(i).deviceaddr)
+                }
+
                 bleList.connects.set(buttonInfo.position,resourceId);
                 bleList.notifyDataSetChanged();
             }
