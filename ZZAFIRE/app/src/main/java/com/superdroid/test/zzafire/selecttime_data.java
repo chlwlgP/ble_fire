@@ -95,14 +95,6 @@ public class selecttime_data extends AppCompatActivity {
         {
             bleList.notifyDataSetChanged();
         }
-
-        List<DeviceInfo> infos = DeviceInfo.listAll(DeviceInfo.class);
-
-        for(int i=0;i<infos.size();i++)
-        {
-            Log.d("HR",infos.get(i).hrdata);
-        }
-
     }
 
     private class BleList extends BaseAdapter {

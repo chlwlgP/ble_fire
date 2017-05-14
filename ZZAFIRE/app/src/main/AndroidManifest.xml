@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         android:name="com.orm.SugarApp">
 
-        <meta-data android:name="DATABASE" android:value="kkkkkkk.db" />
+        <meta-data android:name="DATABASE" android:value="wd.db" />
         <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.superdroid.test.zzafire" />
@@ -39,10 +39,6 @@
         <activity android:name=".realtime_data" />
         <activity android:name=".selecttime_data" />
 
-        <service
-            android:name=".BluetoothLeService"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".BluetoothLeService"
             android:enabled="true"
