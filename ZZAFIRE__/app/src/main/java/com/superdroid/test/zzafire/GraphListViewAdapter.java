@@ -98,4 +98,8 @@ public class GraphListViewAdapter extends BaseAdapter {
 
 		return itemLayout;
 	}
+
+	public void remove(int position) {
+
+	}
 }

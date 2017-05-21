@@ -22,7 +22,7 @@
 		android:theme="@style/AppTheme"
 		android:name="com.orm.SugarApp">
 
-		<meta-data android:name="DATABASE" android:value="DeviceInfo.db"/>
+		<meta-data android:name="DATABASE" android:value="Device.db"/>
 		<meta-data android:name="VERSION" android:value="1" />
 		<meta-data android:name="QUERY_LOG" android:value="true" />
 		<meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.superdroid.test.zzafire"/>
@@ -40,8 +40,6 @@
 		<activity
 			android:name=".FindWDActivity"
 			android:label="WD 기기관리"/>
-
-		<activity android:name=".RenameActivity"/>
 
 		<activity android:name=".RealtimeDataActivity"/>
 

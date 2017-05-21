@@ -63,6 +63,10 @@ public class BleListViewAdapter extends BaseAdapter {
 		devices.clear();
 	}
 
+	public Boolean getIsCheck(int index) {
+		return this.isCheck.get(index);
+	}
+
 	public void setIsCheck(int index) {
 		this.isCheck.set(index, !this.isCheck.get(index));
 	}

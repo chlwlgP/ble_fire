@@ -14,6 +14,7 @@ public class DBManager extends SQLiteOpenHelper {
 	public static final String col_1;
 	public static final String col_2;
 	public static final String col_3;
+	public static final String col_4;
 	public static final int VERSION;
 
 	private static DBManager dbManager;
@@ -21,11 +22,12 @@ public class DBManager extends SQLiteOpenHelper {
 	private Context context;
 
 	static {
-		DATABASE = "TEST.db";
+		DATABASE = "kwon.db";
 		TABLE = "Test";
-		col_1 = "_id";
-		col_2 = "Time";
-		col_3 = "HR";
+		col_1 = "address";
+		col_2 = "hrdata";
+		col_3 = "year_month";
+		col_4 =  "time";
 		VERSION = 1;
 
 		dbManager = null;

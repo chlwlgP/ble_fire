@@ -23,8 +23,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SeeDataActivity.class);
         startActivity(intent);
     }
-    public void mOnClick_Rename(View v){
-        Intent intent = new Intent(this, RenameActivity.class);
-        startActivity(intent);
-    }
+
 }
