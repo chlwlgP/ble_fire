@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.superdroid.test.zzafire.SelecttimeDataActivity">
+
+    <TextView
+        android:id="@+id/text2"
+        android:background="#FF1962"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="기기선택"/>
+
+    <ListView
+        android:id="@+id/listView_realtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text2"
+        android:layout_centerHorizontal="true">
+    </ListView>
+
+    <ListView
+        android:id="@+id/listView_graph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/listView_realtime">
+    </ListView>
+</RelativeLayout>
