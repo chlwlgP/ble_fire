@@ -1,11 +1,13 @@
 package com.superdroid.test.zzafire;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +17,8 @@ import java.util.Random;
 public class RealtimeDataActivity extends AppCompatActivity {
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/M/dd/HH/mm/ss");
 
-	ListView listView_up;					//리스트뷰 객체
-	BleListViewAdapter bleList = null;		//리스트 어댑터
+	ListView listView_up;               //리스트뷰 객체
+	BleListViewAdapter bleList = null;      //리스트 어댑터
 
 	ListView listView_down;
 	GraphListViewAdapter graphList = null;
@@ -32,51 +34,58 @@ public class RealtimeDataActivity extends AppCompatActivity {
 
 		this.setListView();
 
-		/* 임의로 실시간 데이터 생성
-		testThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					while (!Thread.currentThread().isInterrupted()) {
-						long now = System.currentTimeMillis();
-						Date date = new Date(now);
+      /*
+      // 임의로 실시간 데이터 생성
+      testThread = new Thread(new Runnable() {
+         @Override
+         public void run() {
+            String[] address = new String[] { "00:11:22:33:44:55", "AA:BB:CC:DD:EE:FF", "00:11:22:AA:BB:CC" };
 
-						String[] time = simpleDateFormat.format(date).split("/");
+            try {
+               while (!Thread.currentThread().isInterrupted()) {
+                  long now = System.currentTimeMillis();
+                  Date date = new Date(now);
 
-						Random random = new Random();
-						String hrdata = Integer.toString(random.nextInt(150));
+                  String[] time = simpleDateFormat.format(date).split("/");
 
-						DeviceInfo info = new DeviceInfo(
-								"00:11:22:AA:BB:CC",
-								hrdata,
-								time[0],
-								time[1],
-								time[2],
-								time[3],
-								time[4],
-								time[5]);
-						info.save();
+                  for (int i = 0; i < address.length; i++ ) {
+                     Random random = new Random();
+                     String hrdata = Integer.toString(random.nextInt(150));
 
-						Thread.sleep(1000);
-					}
-				} catch (InterruptedException ie) {
+                     DeviceInfo info = new DeviceInfo(
+                        address[i],
+                        hrdata,
+                        time[0],
+                        time[1],
+                        time[2],
+                        time[3],
+                        time[4],
+                        time[5]);
+                  info.save();
+                  }
 
-				} catch (Exception e) {
+                  Thread.sleep(1000);
+               }
+            } catch (InterruptedException ie) {
 
-				} finally {
-					Log.d("CHAELIN", "Test Input Thread Dead");
-				}
-			}
-		});
-		testThread.start();
-		 임의로 실시간 데이터 생성 끝 */
+            } catch (Exception e) {
+
+            } finally {
+               Log.d("CHAELIN", "Test Input Thread Dead");
+            }
+         }
+      });
+      testThread.start();
+      // 임의로 실시간 데이터 생성 끝
+      */
 	}
 
-	@Override
-	public void onBackPressed() {
-		testThread.interrupt();
-		super.onBackPressed();
-	}
+    public void onBackPressed(){
+        Intent intent = new Intent(this, SeeDataActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(intent);
+    }
+
 
 	@Override
 	protected void onDestroy() {
@@ -85,20 +94,40 @@ public class RealtimeDataActivity extends AppCompatActivity {
 	}
 
 	private void setListView() {
-		int size = 3;
+		// 기기 address 가져오기
+		//List<DeviceInfo> info = DeviceInfo.find(DeviceInfo.class, null, null, "address", "address asc", null);
+
+		long now = System.currentTimeMillis() - 2000; //현재시간
+		Date date = new Date(now);
+
+		String[] currentTime = simpleDateFormat.format(date).split("/"); //시간 나눠서 배열에
+
+		List<DeviceInfo> info = DeviceInfo.find(DeviceInfo.class,
+				"year=? and month=? and day=? and hour=? and min=? and sec=?",
+				new String[] { currentTime[0], currentTime[1], currentTime[2], currentTime[3], currentTime[4], currentTime[5]},
+				"address",
+				"address asc",
+				null);
+
+
+		if (info.size() == 0) {
+			Toast.makeText(getApplicationContext(), "데이터가 없습니다", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		int size = info.size();
 
 		this.threads = new Thread[size];
 
-		/* BleListView */
 		bleList = new BleListViewAdapter(this, size);
 		listView_up = (ListView) findViewById(R.id.listView_realtime);
 		listView_up.setAdapter(bleList);
 
-		setDevice_Test(0, "기기명 1");
-		setDevice_Test(1, "기기명 2");
-		setDevice_Test(2, "기기명 3");
+		for (int i = 0; i < size; i++) {
+			setDevice(i, info.get(i).address.toString());
+		}
 
-		/* GraphListView */
+      /* GraphListView */
 		graphList = new GraphListViewAdapter(getApplicationContext(), bleList.getCount());
 		listView_down = (ListView) findViewById(R.id.listView_graph);
 		listView_down.setAdapter(graphList);
@@ -130,14 +159,15 @@ public class RealtimeDataActivity extends AppCompatActivity {
 						long now = System.currentTimeMillis();
 						Date date = new Date(now);
 
+						String address = bleList.getDevice(position);
 						String[] currentTime = simpleDateFormat.format(date).split("/");
 
 						Thread.sleep(1000);
 
 						List<DeviceInfo> info = DeviceInfo.find(
 								DeviceInfo.class,
-								"year=? and month=? and day=? and hour=? and min=? and sec=?",
-								currentTime,
+								"address=? and year=? and month=? and day=? and hour=? and min=? and sec=?",
+								new String[] { address, currentTime[0], currentTime[1], currentTime[2], currentTime[3], currentTime[4], currentTime[5] },
 								null,
 								null,
 								null);
@@ -194,12 +224,12 @@ public class RealtimeDataActivity extends AppCompatActivity {
 		}
 	}
 
-	private void setDevice_Test(int index, String device) {
+	private void setDevice(int index, String device) {
 		bleList.setDevice(index, device);
 		bleList.notifyDataSetChanged();
 	}
 
-	private void setPoint_Test(int index, Point[] point) {
+	private void setPoint(int index, Point[] point) {
 		graphList.setPoint(index, point);
 		graphList.notifyDataSetChanged();
 	}

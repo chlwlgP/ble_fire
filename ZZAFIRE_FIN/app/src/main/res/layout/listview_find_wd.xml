@@ -44,7 +44,7 @@
         android:background="#FCDDD4"
         android:textSize="15dp"
         android:layout_alignParentEnd="true"
-        />
+   />
 
     <TextView
         android:id="@+id/text_address"

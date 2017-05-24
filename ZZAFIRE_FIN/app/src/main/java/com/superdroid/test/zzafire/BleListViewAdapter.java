@@ -87,7 +87,6 @@ public class BleListViewAdapter extends BaseAdapter {
 
 			viewHolder = new ViewHolder();
 			viewHolder.checkBox = (CheckBox) itemLayout.findViewById(R.id.checkbox_name);
-			viewHolder.textView = (TextView) itemLayout.findViewById(R.id.textView_realtime);
 
 			itemLayout.setTag(viewHolder);
 		} else {
@@ -98,13 +97,11 @@ public class BleListViewAdapter extends BaseAdapter {
 		viewHolder.checkBox.setFocusable(false);
 		viewHolder.checkBox.setClickable(false);
 		viewHolder.checkBox.setChecked(this.isCheck[position]);
-		viewHolder.textView.setText("Test");
 
 		return itemLayout;
 	}
 
 	private class ViewHolder {
 		CheckBox checkBox;
-		TextView textView;
 	}
 }

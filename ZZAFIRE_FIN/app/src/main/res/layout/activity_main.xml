@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="com.superdroid.test.zzafire.MainActivity"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<ImageView
+		android:id="@+id/imageView_logo"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:src="@drawable/logo"
+		android:layout_marginTop="32dp"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentStart="true" />
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:layout_marginTop="32dp"
+		android:weightSum="2"
+		android:id="@+id/linearLayout">
+
+		<Button
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:id="@+id/button_data"
+			android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:drawableTop="@drawable/line"
+			android:drawablePadding="10dp"
+			android:text="데이터\n보기"
+			android:textSize="24sp"
+			android:onClick="mOnClick_Data"/>
+
+		<Button
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:id="@+id/button_wd"
+			android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:drawableTop="@drawable/smartwatch"
+			android:drawablePadding="10dp"
+			android:text="WD기기\n연결"
+			android:textSize="24sp"
+			android:onClick="mOnClick_WD"/>
+
+	</LinearLayout>
+
+	<Button
+		android:id="@+id/btn_csv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="35dp"
+		android:background="#FCDDD4"
+		android:text="csv"
+		android:layout_below="@+id/linearLayout"
+		android:layout_centerHorizontal="true" />
+</RelativeLayout>

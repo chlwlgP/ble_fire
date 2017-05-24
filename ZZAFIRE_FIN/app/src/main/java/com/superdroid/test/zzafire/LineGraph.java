@@ -29,20 +29,27 @@ public class LineGraph {
 		mDataset.addSeries(dataset);
 
 		// XYSeries들의 리스트
-		/* 다른 그래프를 추가하고 싶으면 XYSeries를 추가로 생성한 후, dataset.addSeries(series) 해준다*/
+      /* 다른 그래프를 추가하고 싶으면 XYSeries를 추가로 생성한 후, dataset.addSeries(series) 해준다*/
 		//custom renderer
-		renderer.setColor(Color.BLUE);
+		renderer.setColor(Color.RED);
 		renderer.setPointStyle(PointStyle.SQUARE);
 		renderer.setFillPoints(true);
 		renderer.setDisplayChartValues(true);
 		renderer.setChartValuesTextAlign(Paint.Align.RIGHT);
 		renderer.setChartValuesTextSize(40);
+		renderer.setLineWidth(5.0f);
 
 		//Enable zoom on multi xy renderer
+		mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00));
+		mRenderer.setApplyBackgroundColor(true);
+		mRenderer.setBackgroundColor(Color.TRANSPARENT);
 		mRenderer.setZoomButtonsVisible(true);
 		mRenderer.setXTitle("Day #");
-		mRenderer.setYTitle("Heart Rate");
-		mRenderer.setAxisTitleTextSize(40);
+		mRenderer.setYTitle("Data");
+		mRenderer.setAxisTitleTextSize(60);
+		mRenderer.setShowGrid(true);
+		mRenderer.setFitLegend(true);
+		mRenderer.setGridColor(Color.DKGRAY);
 		//mRenderer.addXTextLabel(p.getX(), p.getY())
 
 		//Add single renderer to multiple renderer

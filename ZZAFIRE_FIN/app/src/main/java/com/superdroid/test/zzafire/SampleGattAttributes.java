@@ -24,6 +24,7 @@ import java.util.HashMap;
 public class SampleGattAttributes {
     private static HashMap<String, String> attributes = new HashMap();
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
+    public static String UUID_BLOOD_PRESSURE_MEASUREMENT = "00002a35-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
     static {
@@ -61,7 +62,7 @@ public class SampleGattAttributes {
         attributes.put("00002a01-0000-1000-8000-00805f9b34fb", "Appearance");
         attributes.put("00002a19-0000-1000-8000-00805f9b34fb", "Battery Level");
         attributes.put("00002a49-0000-1000-8000-00805f9b34fb", "Blood Pressure Feature");
-        attributes.put("00002a35-0000-1000-8000-00805f9b34fb", "Blood Pressure Measurement");
+        attributes.put(UUID_BLOOD_PRESSURE_MEASUREMENT, "Blood Pressure Measurement");
         attributes.put("00002a38-0000-1000-8000-00805f9b34fb", "Body Sensor Location");
         attributes.put("00002a22-0000-1000-8000-00805f9b34fb", "Boot Keyboard Input Report");
         attributes.put("00002a32-0000-1000-8000-00805f9b34fb", "Boot Keyboard Output Report");
@@ -140,4 +141,3 @@ public class SampleGattAttributes {
         return name == null ? defaultName : name;
     }
 }
-

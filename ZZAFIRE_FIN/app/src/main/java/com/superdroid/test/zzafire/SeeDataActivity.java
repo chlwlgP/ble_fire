@@ -15,11 +15,19 @@ public class SeeDataActivity extends AppCompatActivity {
 
     public void mOnClick_realtime(View v){
         Intent intent = new Intent(this, RealtimeDataActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
 
     public void mOnClick_selecttime(View v){
         Intent intent = new Intent(this, SelecttimeDataActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
+    }
+
+    public void onBackPressed(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
 }
